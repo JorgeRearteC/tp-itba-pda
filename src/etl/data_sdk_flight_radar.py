@@ -22,6 +22,27 @@ for flight in flybondi_flights:
     flight_detail = fr_api.get_flight_details(flight)
     print(flight_detail)
     flights_detail.append(flight_detail)
-    
-    
-# df_flights_datail = pd.DataFrame(flights_detail)
+
+
+df_flights_datail = pd.DataFrame(flights_detail)
+
+
+### INFO GENERAL DEL VUELO
+df_normalize_identification = pd.json_normalize(df_flights_datail['identification'])
+df_normalize_status = pd.json_normalize(df_flights_datail['status'])
+df_normalize_aircraft = pd.json_normalize(df_flights_datail['aircraft'])
+df_normalize_airline = pd.json_normalize(df_flights_datail['airline'])
+df_normalize_airport = pd.json_normalize(df_flights_datail['airport'])
+df_normalize_time = pd.json_normalize(df_flights_datail['time'])
+
+df_flights = df_normalize_identification.join(df_normalize_status).join(df_normalize_aircraft).join(df_normalize_airline).join(df_normalize_airport).join(df_normalize_time)
+
+
+
+### RUTA DEL VUELO
+df_explode_trail = df_flights_datail.explode('trail')
+df_explode_trail = pd.DataFrame(df_explode_trail[['identification','trail']])
+df_normalize_trail = pd.json_normalize(df_explode_trail['trail'])
+df_explode_trail = df_explode_trail.join(df_normalize_trail)
+df_normalize_id = pd.json_normalize(df_explode_trail['identification'])
+df_explode_trail = df_explode_trail.join(df_normalize_id)
