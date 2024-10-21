@@ -2,3 +2,6 @@ pandas
 sqlalchemy
 FlightRadarAPI
 pytest
+apache-airflow
+python-dotenv
+psycopg2-binary
