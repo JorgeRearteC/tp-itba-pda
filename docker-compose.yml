@@ -1,20 +1,41 @@
 version: '3.8'
 
 services:
-
-  app-etl:
+  airflow:
     build:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ./src:/opt
-      - ./requirements.txt:/opt/requirements.txt
+      - ./dags:/opt/airflow/dags  # Montar DAGs
+      - ./logs:/opt/airflow/logs  # Persistir logs
+      - ./plugins:/opt/airflow/plugins  # Plugins de Airflow
+      - ./requirements.txt:/opt/requirements.txt  # Requerimientos
     environment:
-      - AIRFLOW__CORE__EXECUTOR=SequentialExecutor
-      - AIRFLOW__CORE__SQL_ALCHEMY_CONN=sqlite:////opt/airflow/airflow.db 
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor  # Executor robusto para producción
+      AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      AIRFLOW_HOME: /opt/airflow
     env_file:
       - .env
+    depends_on:
+      - postgres
     ports:
       - "8080:8080"
     command: ["airflow", "standalone"]
+
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:  # Persistir datos de PostgreSQL
+  logs:  # Persistir logs de Airflow
+  plugins:  # Plugins personalizados
+
+
 
