@@ -25,6 +25,8 @@ Ejecutamos el siguiente comando: docker build -t tp-itba-pda .
 3. Levantar Airflow:
 Ejecutamos el siguiente comando: docker-compose up
 
+4. De manera local sera posible visualizar los dags generado en: http://localhost:8080/home
+
 Por defecto el usuario y clave son admin pero se podria generar un usuario propio con el siguiente comando:
 
 airflow users create \
