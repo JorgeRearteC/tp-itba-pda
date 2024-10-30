@@ -1,10 +1,9 @@
 import pytest
 import pandas as pd
 from unittest.mock import MagicMock
-from etl.etl_data_sdk_flight_radar import (
+from dags.etl.etl_data_sdk_flight_radar import (
     get_flybondi_flights,
-    get_flight_details,
-    process_flight_data
+    get_flight_details
 )
 
 def test_get_flybondi_flights():
