@@ -8,6 +8,25 @@ El objetivo de este proyecto es desarrollar una solución automatizada de integr
 La idea central es construir un pipeline ETL (Extracción, Transformación y Carga) eficiente, que permita recopilar y normalizar en tiempo real información relevante de vuelos operados por aerolíneas específicas. 
 Esta solución será diseñada para ser fácilmente desplegable y escalable mediante contenedores Docker, asegurando portabilidad y simplicidad en su configuración.
 
+### Tablas:
+En el proyecto generamos dos tablas, flights y airlines.
+
+- Flights: 
+El objetivo de la presente es mantener las posiciones actuales de los aviones de Flybondi. 
+En particular esta solución estaria orientada a un equipo que le de seguimiento a la parte operativa de los aviones propios.
+*En un principio mi idea era generar un mapa interactivo para marcar las posiciones al estilo [Flight Radar](https://www.flightradar24.com/)*
+
+- Airlines:
+El objetivo es tener un listado de todas las aerolineas existentes del mundo, obteniendo de la misma tres datos, el nombre de la aerolinea, el codigo y el ICAO que es el código unico en el mundo definido por Org. de Aviación Civil Internacional. La misma establece normativas en común a nivel internacional. 
+
+Dejamos en la carpeta sql los create table de ambas tablas.
+
+### Test:
+En este punto, se han probado dos métodos del proceso etl_data_sdk_flight_radar.py que utilizan llamadas al SDK de Flight Radar. Ambas pruebas implementan mocking para simular el comportamiento de la API, lo que permite validar la lógica sin realizar llamadas reales a servicios externos. Esto nos da la confianza necesaria para asegurar que los resultados obtenidos sean los esperados.
+
+- test_get_flybondi_flights: Esta prueba tiene como objetivo obtener el listado de vuelos disponibles. Se verifica que la función retorne correctamente los vuelos solicitados a través del SDK.
+- test_get_flight_details: En esta prueba, buscamos obtener el detalle de los vuelos que fueron obtenidos en la prueba anterior. Se valida que la función devuelva la información detallada de cada vuelo correctamente.
+
 
 ### Instalación
 
