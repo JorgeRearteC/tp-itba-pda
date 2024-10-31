@@ -1,7 +1,7 @@
 import pytest
 import pandas as pd
-from unittest.mock import MagicMock
-import etl_data_sdk_flight_radar as sdk_fr
+from unittest.mock import MagicMock, call
+from . import etl_data_sdk_flight_radar as sdk_fr
 
 def test_get_flybondi_flights():
     # Mock de la API y su respuesta
@@ -19,7 +19,7 @@ def test_get_flight_details():
     # Mock de la API y su respuesta
     api_mock = MagicMock()
     api_mock.get_flight_details.side_effect = [
-        {"flight": "detail_1"}, 
+        {"flight": "detail_1"},
         {"flight": "detail_2"}
     ]
 
@@ -29,5 +29,7 @@ def test_get_flight_details():
 
     # Verificamos los resultados
     assert details == [{"flight": "detail_1"}, {"flight": "detail_2"}]
-    api_mock.get_flight_details.assert_has_calls([MagicMock().call("flight_1"), MagicMock().call("flight_2")])
+    
+    # Verifica las llamadas realizadas usando 'call'
+    api_mock.get_flight_details.assert_has_calls([call("flight_1"), call("flight_2")])
 
