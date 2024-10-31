@@ -19,6 +19,7 @@ En particular esta solución estaria orientada a un equipo que le de seguimiento
 - Airlines:
 El objetivo es tener un listado de todas las aerolineas existentes del mundo, obteniendo de la misma tres datos, el nombre de la aerolinea, el codigo y el ICAO que es el código unico en el mundo definido por Org. de Aviación Civil Internacional. La misma establece normativas en común a nivel internacional. 
 
+Dejamos en la carpeta sql los create table de ambas tablas.
 
 ### Test:
 En este punto, se han probado dos métodos del proceso etl_data_sdk_flight_radar.py que utilizan llamadas al SDK de Flight Radar. Ambas pruebas implementan mocking para simular el comportamiento de la API, lo que permite validar la lógica sin realizar llamadas reales a servicios externos. Esto nos da la confianza necesaria para asegurar que los resultados obtenidos sean los esperados.
