@@ -24,8 +24,14 @@ def run_etl():
     # Procesar los datos
     df_flights = process_flight_data(df_flights_detail)
 
+    rd = redshift_connection()
+
     # Insertar en Redshift
-    insert_into_redshift(df_flights)
+    overwrite_into_redshift(df_flights,rd)
+
+    df_flight_events_history = process_flight_events_data(df_flights)
+    
+    insert_into_redshift(df_flight_events_history,rd)
 
 
 def get_flybondi_flights(api, airline_icao, bounds):
@@ -84,19 +90,68 @@ def process_flight_data(df_flights_detail):
 
     return df_flights
 
+def process_flight_events_data(df_flights):
+        
+    columns = [
+        "id",
+        "callsign",
+        "number_default",
+        "generic_status_text",
+        "generic_status_type",
+        "generic_eventtime_utc",
+        "generic_eventtime_local",
+        "countryid",
+        "registration",
+        "model_code",
+        "code_iata",
+        "origin_code_iata",
+        "origin_position_latitude",
+        "origin_position_longitude",
+        "origin_position_altitude",
+        "destination_code_iata",
+        "destination_position_latitude",
+        "destination_position_longitude",
+        "destination_position_altitude",
+        "scheduled_departure",
+        "scheduled_arrival",
+        "real_departure",
+        "real_arrival",
+        "estimated_departure",
+        "estimated_arrival",
+        "historical_flighttime",
+        "historical_delay",
+        "latitude",
+        "longitude",
+        "altitude",
+        "speed",
+        "capture_datetime_utc",
+        "heading"
+    ]
+    df_flight_events_history = df_flights[columns]
+    
+    return df_flight_events_history
 
-def insert_into_redshift(df_flights):
-    """Inserta el DataFrame en la base de datos Redshift."""
-    rd = RedshiftDatabase(
+def redshift_connection():
+    redshift_connection = RedshiftDatabase(
         username=os.getenv('REDSHIFT_USER'), 
         password=os.getenv('REDSHIFT_PASS'), 
         host=os.getenv('REDSHIFT_HOST'), 
         port=os.getenv('REDSHIFT_PORT'), 
         database=os.getenv('REDSHIFT_DB')
     )
+    return redshift_connection
 
-    # Reordenar columnas según Redshift
-    df_flights = rd.order_columns(df_flights, 'flights', '2024_jorge_roberto_rearte_carvalho_schema')
 
-    # Insertar datos en Redshift
-    rd.insert(df_flights, 'flights', '2024_jorge_roberto_rearte_carvalho_schema')
+def insert_into_redshift(df_flight_events_history,redshift_connection):
+    """Inserta el DataFrame en la base de datos Redshift."""
+
+    df_flight_events_history = redshift_connection.order_columns(df_flight_events_history, 'flight_events_history', '2024_jorge_roberto_rearte_carvalho_schema')
+
+    redshift_connection.insert(df_flight_events_history, 'flight_events_history', '2024_jorge_roberto_rearte_carvalho_schema')
+
+def overwrite_into_redshift(df_flights,redshift_connection):
+    """Inserta el DataFrame en la base de datos Redshift."""
+
+    df_flights = redshift_connection.order_columns(df_flights, 'flights', '2024_jorge_roberto_rearte_carvalho_schema')
+
+    redshift_connection.overwrite_table(df_flights, 'flights', '2024_jorge_roberto_rearte_carvalho_schema')

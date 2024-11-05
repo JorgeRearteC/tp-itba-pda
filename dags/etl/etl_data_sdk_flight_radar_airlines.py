@@ -47,4 +47,4 @@ def insert_into_redshift(df_airlines):
     )
 
     # Insertar datos en Redshift
-    rd.insert(df_airlines, 'airlines', '2024_jorge_roberto_rearte_carvalho_schema')
+    rd.overwrite_table(df_airlines, 'airlines', '2024_jorge_roberto_rearte_carvalho_schema')

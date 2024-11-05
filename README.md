@@ -21,6 +21,9 @@ El objetivo es tener un listado de todas las aerolineas existentes del mundo, ob
 
 Dejamos en la carpeta sql los create table de ambas tablas.
 
+- Flight Events History: (04/11/2024)
+Incorporamos la tabla flight_events_history con el objetivo de mantener un historial detallado de las posiciones de los vuelos observados. Esto permitirá realizar análisis operativos segmentados por tramo (origen-destino) y por avión. Estos análisis son fundamentales, ya que se utilizan comúnmente para evaluar el consumo de combustible, la performance de los comandantes, la eficiencia de las aeronaves, así como para relacionar posibles demoras o incidentes con condiciones climáticas, entre otros factores. Aunque muchos de estos datos se obtienen directamente del avión, es más fácil y rápido obtener esta información a través de esta API.
+
 ### Test:
 En este punto, se han probado dos métodos del proceso etl_data_sdk_flight_radar.py que utilizan llamadas al SDK de Flight Radar. Ambas pruebas implementan mocking para simular el comportamiento de la API, lo que permite validar la lógica sin realizar llamadas reales a servicios externos. Esto nos da la confianza necesaria para asegurar que los resultados obtenidos sean los esperados.
 

@@ -34,12 +34,25 @@ class RedshiftDatabase:
                 time.sleep(1)  # Espera antes de reintentar
                 self.recreate_engine()
 
-    def insert(self, df, table_name, schema):
+    def overwrite_table(self, df, table_name, schema):
         """Inserta un DataFrame en una tabla de Redshift."""
         print('Start insert.')
         while True:
             try:
                 df.to_sql(table_name, self.engine, schema=schema, index=False, if_exists='replace', method='multi')
+                print("Inserción exitosa.")
+                break
+            except OperationalError:
+                print("Error de conexión. Reintentando...")
+                time.sleep(1)  # Espera antes de reintentar
+                self.recreate_engine()
+    
+    def insert(self, df, table_name, schema):
+        """Inserta un DataFrame en una tabla de Redshift."""
+        print('Start insert.')
+        while True:
+            try:
+                df.to_sql(table_name, self.engine, schema=schema, index=False, if_exists='append', method='multi')
                 print("Inserción exitosa.")
                 break
             except OperationalError:
